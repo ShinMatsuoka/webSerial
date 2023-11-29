@@ -10,7 +10,8 @@ let num = 0;
 const log = document.getElementById('log');
 //htmlが読み込まれた時点で発火するイベント
 document.addEventListener('DOMContentLoaded', () => {
-	butConnect.addEventListener('click', clickConnect);	//connectボタン
+	prompt_2_connect_serialPorts();
+	// butConnect.addEventListener('click', clickConnect);	//connectボタン
 	//デバイスがwebSerialをサポートしていたら表示しない
 	const notSupported = document.getElementById('notSupported');
 	notSupported.classList.toggle('hidden', 'serial' in navigator);
@@ -36,10 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
  * シリアルポートに接続
  */
  async function connect() {
-	//ポートオープンと接続を要求
-	port[num] = await navigator.serial.requestPort();
+	try	{
+		//ポートオープンと接続を要求
+		port[num] = await navigator.serial.requestPort();
+	} catch(error)	{
+		alert("ポートを選択してください");
+		return false;
+	}
 	//ポートがオープンするまで待つ
-	await port[num].open({ baudRate: 115200 });
+	try	{
+		await port[num].open({ baudRate: 115200 });
+	} catch(error)	{
+		alert("このポートはすでに接続済み");
+		num = 1;
+		return false;
+	}
 	//データストリームを読み出すところ
 	//取り込んだデータをutf-8に変換してくれる
 	let decoder = new TextDecoderStream("shift-jis");
@@ -51,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		readLoop();
 	else
 		readLoop2();
+	return true;
 }
 
 /**
@@ -147,4 +160,47 @@ function toggleUIConnected(connected) {
 		lbl = 'Disconnect';
 	}
 	butConnect.textContent = lbl;
+}
+//-----------------------------------
+//モーダルウィンドウを開きシリアルポート２つを接続するように促す
+const prompt_2_connect_serialPorts = _ =>	{
+	const modal = document.createElement("dialog");
+	let div = document.createElement("div");
+	const mes = ["接続ボタンをクリックしシリアルポートに接続してください"
+	,"接続_2ボタンをクリックしシリアルポートに接続してください"];
+	div.textContent = "接続ボタンをクリックし、シリアルポートを選択し接続してください";
+	div.className = "modal_message";
+	modal.append(div);
+
+	div = document.createElement("div");
+	const btn = document.createElement("button");
+	btn.textContent = "QRコードリーダへの接続";
+	btn.className = "btn_connect";
+	div.append(btn);
+	modal.append(div);	//接続ログ表示エリア
+	div = document.createElement("div");
+	div.className = "connection_log";
+	modal.append(div);
+	document.querySelector("body").append(modal);
+	modal.showModal();	//モーダルウィンドウを開く
+	//接続ボタンをクリック
+	document.querySelector(".btn_connect").onclick = async e =>	{
+		div = document.createElement("div");
+		if(!await connect())
+			return;
+		const info = port[num].getInfo();
+		document.querySelector(".connection_log").innerHTML += 
+			(++num) + "台目のQRコードリーダに接続しました。"
+			+ "<br/>2台目のQRコードリーダに接続してください";
+		if(num == 2)	{
+			document.querySelectorAll("dialog div").forEach(v => v.remove());
+			const div = document.createElement("div");
+			div.textContent = "2台のQRコードリーダに接続しました";
+			const modal = document.querySelector("dialog");
+			modal.append(div);
+			setTimeout(_ =>	{
+				modal.close();	//2台目が接続したら閉じる
+			},3 * 1000);
+		}
+	}
 }

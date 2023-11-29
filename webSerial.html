@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+  <head>
+    <title>Web Serialのテスト</title>
+    <meta charset="utf-8" />
+    <meta name="codelab" content="getting-started-w-web-serial" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script></script>
+    <link rel="stylesheet" href="style.css" />
+    <!-- <script src="script.js" defer></script> -->
+    <script src="script2.js" defer></script>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Web Serialのテスト:QRコードスキャナ(シリアルモード)を接続</h1>
+    </header>
+    <main class="main">
+      <div id="notSupported" class="hidden">
+        残念ですが
+        <b>Web Serial</b>
+        はこのデバイスではサポートされていません。グーグルクロームのバージョン78以上を使用し、アドレスバーから
+        <code>chrome://flags</code>を開き
+        <code>#enable-experimental-web-platform-features</code>
+        フラグを<b>enable</b>にしてください
+      </div>
+      <button id="butConnect" type="button">Connect</button>
+      <button id="btnTime" type="button">タイムスタンプ</button>
+      <input type="text" id="text" />
+      <button id="clear" type="button">クリア</button>
+      <div id="log"></div>
+    </main>
+  </body>
+</html>

@@ -93,7 +93,12 @@ async function readLoop() {
 	while (true) {
 	const { value, done } = await reader.read();
 		if (value) {							//値があれば表示
-			log.innerHTML += value;
+			// log.innerHTML += value;
+			//受信したバイトオーダの配列をシフトjisからunicodeに変換､それを文字列に変換
+			log.innerHTML += Encoding.codeToString(Encoding.convert(value, {
+			  to: 'UNICODE',
+			  from: 'SJIS'
+			}));
 			if(!timerID)	{
 				clearTimeout(timerID); //指定時間何も受信しなければ改行
 				timerID = setTimeout(function()	{

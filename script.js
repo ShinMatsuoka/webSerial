@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	await port.open({ baudRate: 115200 });
 	//データストリームを読み出すところ
 	//取り込んだデータをutf-8に変換してくれる
-	let decoder = new TextDecoderStream("sjis");
+	let decoder = new TextDecoderStream("sjis");	//この指定で､sjis->utf8に変換
 	inputDone = port.readable.pipeTo(decoder.writable);
 	inputStream = decoder.readable;
 

@@ -41,10 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	//データストリームを読み出すところ
 	//取り込んだデータをutf-8に変換してくれる
 	let decoder = new TextDecoderStream();
-	inputDone = port.readable.pipeTo(decoder.writable);
-	inputStream = decoder.readable;
+	// inputDone = port.readable.pipeTo(decoder.writable);
+	// inputStream = decoder.readable;
 
-	reader = inputStream.getReader();
+	// reader = inputStream.getReader();
+	 reader = port.readble.getReader();
 	readLoop();
 }
 

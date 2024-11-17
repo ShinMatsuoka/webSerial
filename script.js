@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// inputStream = decoder.readable;
 
 	// reader = inputStream.getReader();
-	 reader = port.readble.getReader();
+	 reader = port.readable.getReader();
 	readLoop();
 }
 

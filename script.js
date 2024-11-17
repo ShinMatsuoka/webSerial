@@ -2,6 +2,7 @@
 
 let port;
 let reader;
+let reader_sjis;
 let inputDone;
 let inputStream;
 

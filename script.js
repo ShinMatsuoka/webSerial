@@ -40,11 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
 	await port.open({ baudRate: 115200 });
 	//データストリームを読み出すところ
 	//取り込んだデータをutf-8に変換してくれる
-	let decoder = new TextDecoderStream();
-	// inputDone = port.readable.pipeTo(decoder.writable);
-	// inputStream = decoder.readable;
+	let decoder = new TextDecoderStream("sjis");
+	inputDone = port.readable.pipeTo(decoder.writable);
+	inputStream = decoder.readable;
 
-	// reader = inputStream.getReader();
+	reader_sjis = inputStream.getReader();
 	 reader = port.readable.getReader();
 	readLoop();
 }
@@ -91,7 +91,8 @@ async function readLoop() {
 	var timerID;
 	//ループで読み込むのを待つ
 	while (true) {
-	const { value, done } = await reader.read();
+	// const { value, done } = await reader.read();
+	const { value, done } = await reader_sjis.read();
 		if (value) {							//値があれば表示
 			// log.innerHTML += value;
 			//受信したバイトオーダの配列をシフトjisからunicodeに変換､それを文字列に変換
